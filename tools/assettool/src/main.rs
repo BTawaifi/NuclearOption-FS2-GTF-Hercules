@@ -34,14 +34,14 @@ fn main() {
     let interactive = env::args().len() == 1;
     if let Err(error) = run() {
         if interactive {
-            show_message("FS2 Hercules", &format!("Extraction failed: {error}"));
+            show_message("Nuclear Option: FS2 GTF Hercules", &format!("Extraction failed: {error}"));
         }
-        eprintln!("FS2Hercules asset extraction failed: {error}");
+        eprintln!("Nuclear Option FS2 GTF Hercules asset extraction failed: {error}");
         std::process::exit(1);
     }
     if interactive {
         show_message(
-            "FS2 Hercules",
+            "Nuclear Option: FS2 GTF Hercules",
             "Assets created successfully. Restart Nuclear Option to load them.",
         );
     }
@@ -93,13 +93,13 @@ fn run() -> Result<()> {
             .collect::<Vec<_>>(),
     )?;
 
-    println!("Generated FS2Hercules assets in {}", output.display());
+    println!("Generated Nuclear Option FS2 GTF Hercules assets in {}", output.display());
     println!("The original VP, POF, and PCX data was read in memory and was not copied.");
     Ok(())
 }
 
 fn print_help() {
-    println!("FS2Hercules asset extractor");
+    println!("Nuclear Option: FS2 GTF Hercules asset extractor");
     println!();
     println!("Usage:");
     println!("  FS2Hercules.AssetTool.exe --freespace <FS2 folder or VP file> [--output <assets folder>]");

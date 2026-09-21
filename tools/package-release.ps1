@@ -6,9 +6,10 @@ param(
 
 $ErrorActionPreference = "Stop"
 $root = Split-Path -Parent $PSScriptRoot
-$stageRoot = Join-Path $root "artifacts\FS2Hercules-$Version-release"
-$payload = Join-Path $stageRoot "FS2Hercules"
-$archive = Join-Path $root "artifacts\FS2Hercules-$Version.zip"
+$releaseName = "NuclearOption-FS2-GTF-Hercules-$Version"
+$stageRoot = Join-Path $root "artifacts\$releaseName-release"
+$payload = Join-Path $stageRoot "NuclearOption-FS2-GTF-Hercules"
+$archive = Join-Path $root "artifacts\$releaseName.zip"
 
 if ([string]::IsNullOrWhiteSpace($GameDir)) {
     $GameDir = $env:NuclearOptionGameDir
