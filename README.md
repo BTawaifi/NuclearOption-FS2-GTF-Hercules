@@ -1,70 +1,45 @@
 # FS2 Hercules
 
-FS2 Hercules is a BepInEx 5 plugin for Nuclear Option that adds an atmospheric-refit GTF Hercules heavy-assault aircraft. The plugin registers the aircraft through Harmony patches, reuses the stock fixed-wing aircraft systems for networking and damage, and loads visual assets from the adjacent assets directory.
+BepInEx 5 plugin for Nuclear Option that adds an atmospheric-refit GTF Hercules heavy-assault aircraft.
 
-The repository and release payload do not contain the original FreeSpace 2 VP, POF, or PCX files. The release includes a small self-contained extractor that reads those files from a FreeSpace 2 installation supplied by the player and writes only the four runtime files the mod needs.
+The release does not contain FreeSpace 2 VP, POF, or PCX data. It includes a self-contained extractor that reads those files from a FreeSpace 2 installation supplied by the player and writes the four runtime assets locally.
 
-## Compatibility
+## Install
 
-- Nuclear Option: 0.34.2
-- Loader: BepInEx 5 (Mono, Windows x64)
-- Plugin assembly: FS2Hercules.dll
-- Plugin version: 1.0.0
-
-## Install for players
-
-[NOMM](https://github.com/Combat787/NOMM) is the easiest way to install BepInEx and manage Nuclear Option mods. For a manual install, use [BepInEx 5 Mono x64](https://github.com/BepInEx/BepInEx/releases):
-
-1. Install BepInEx 5 Mono x64 into Nuclear Option and launch the game once.
+1. Install BepInEx 5 Mono x64 and launch Nuclear Option once. [NOMM](https://github.com/Combat787/NOMM) is the easiest route.
 2. Extract the FS2Hercules folder into Nuclear Option/BepInEx/plugins/.
-3. Double-click Extract-FS2Hercules.cmd inside the FS2Hercules folder. You can also double-click tools/FS2Hercules.AssetTool.exe directly.
-4. Select the folder containing the original FreeSpace 2 installation when prompted.
+3. Double-click Extract-FS2Hercules.cmd, or double-click tools/FS2Hercules.AssetTool.exe.
+4. Select the original FreeSpace 2 folder.
 5. Start Nuclear Option.
 
-The launcher and the asset tool use Windows PowerShell for the native folder picker and completion dialog. PowerShell is already included with supported Windows installations. Players do not need the .NET SDK, Python, NumPy, Rust, Cargo, or a FreeSpace Open development checkout.
+The launcher uses Windows PowerShell, already included with supported Windows. Players do not need the .NET SDK, Python, NumPy, Rust, Cargo, or pof-tools.
 
-The launcher auto-detects common Steam and GOG locations. If it cannot find one, it opens a folder picker. It only creates or replaces files in the mod's assets directory; it does not modify the FreeSpace 2 or Nuclear Option installation.
+## Assets
 
-Expected installed layout:
+Generated files live beside the DLL in assets:
 
-    BepInEx/plugins/FS2Hercules/
-        FS2Hercules.dll
-        Extract-FS2Hercules.cmd
-        Extract-FS2Hercules.ps1
-        tools/FS2Hercules.AssetTool.exe
-        assets/
-            HercPBR-glow.png
-            HercPBR-normal.png
-            HercPBR.png
-            hercules.nomesh
+    assets/
+        HercPBR-glow.png
+        HercPBR-normal.png
+        HercPBR.png
+        hercules.nomesh
 
-## External assets and hot swapping
+The mesh must contain a material named HercPBR. Replace these files to hot-swap the model or textures, then restart Nuclear Option. The extractor only writes the mod's assets folder and never modifies either game installation.
 
-The plugin deliberately loads the mesh and textures from the external assets directory beside the DLL. After extraction, a player or creator can replace:
+## Build and package
 
-- hercules.nomesh for the mesh
-- HercPBR.png for the albedo
-- HercPBR-normal.png for the normal map
-- HercPBR-glow.png for the emission map
+Set GameDir to the Nuclear Option install folder:
 
-The mesh must contain a material named HercPBR. Restart Nuclear Option after changing files because the visual is loaded when the aircraft encyclopedia is built. The asset tool only regenerates the default assets; it does not overwrite the original FreeSpace 2 files.
+    dotnet build -c Release -p:GameDir="C:\path\to\Nuclear Option"
 
-## Build from source
+The asset tool is built from tools/assettool/src/main.rs and requires Rust/Cargo plus a local FreeSpace Open pof-tools checkout. Set the pof dependency path in tools/assettool/Cargo.toml if needed.
 
-The plugin targets net472 and uses the pinned SDK in global.json. Set the GameDir property in FS2Hercules.csproj to the local Nuclear Option installation, then run:
+Create the deployment archive with:
 
-    dotnet build -c Release
+    powershell -ExecutionPolicy Bypass -File tools/package-release.ps1 -GameDir "C:\path\to\Nuclear Option"
 
-To build the self-contained asset tool, install Rust/Cargo and obtain a local FreeSpace Open pof-tools checkout. Set the pof dependency path in tools/assettool/Cargo.toml if it is not at the documented development path, then run:
+The archive is written to artifacts/ and contains the DLL, launcher, asset tool, license, notices, and README. It intentionally contains no FreeSpace 2-derived assets.
 
-    cargo build --release --manifest-path tools/assettool/Cargo.toml
+## Submission status
 
-Copy the resulting target/release/fs2hercules-assettool.exe to tools/FS2Hercules.AssetTool.exe when preparing a release archive. The older Python extractor remains in tools/extract_hercules.py as a developer fallback, but is not required by the player workflow.
-
-## NOMNOM release requirements
-
-This repository is structured as one mod with an un-obfuscated source tree, a BepInEx 5 plugin, and source for the bundled asset executable. A release archive should contain the complete FS2Hercules plugin folder, including the launcher and asset tool, as its first GitHub release asset.
-
-The local-extraction design avoids redistributing the original game data, but an archive that requires the player to run the extractor is not a complete immediately-installable package under NOMNOM's strict wording. The remaining approval choices are permission for a distributable asset package, newly created replacement assets, or explicit acceptance of a build-from-user-owned-data workflow.
-
-See NOMNOM_SUBMISSION.md and THIRD_PARTY_NOTICES.md for the remaining submission evidence.
+The source, BepInEx 5 plugin, external-asset workflow, and deployment archive are ready. The only unresolved approval issue is whether NOMNOM accepts a user-owned-data extraction step instead of a complete archive containing the generated visual assets; otherwise the project needs permission for distributable assets or replacement assets. Keep the permission evidence in THIRD_PARTY_NOTICES.md.

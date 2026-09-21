@@ -1,6 +1,7 @@
 [CmdletBinding()]
 param(
-    [string]$Version = "1.0.0"
+    [string]$Version = "1.0.0",
+    [string]$GameDir
 )
 
 $ErrorActionPreference = "Stop"
@@ -9,6 +10,14 @@ $stageRoot = Join-Path $root "artifacts\FS2Hercules-$Version-release"
 $payload = Join-Path $stageRoot "FS2Hercules"
 $archive = Join-Path $root "artifacts\FS2Hercules-$Version.zip"
 
+if ([string]::IsNullOrWhiteSpace($GameDir)) {
+    $GameDir = $env:NuclearOptionGameDir
+}
+if ([string]::IsNullOrWhiteSpace($GameDir) -or
+    -not (Test-Path -LiteralPath (Join-Path $GameDir "NuclearOption_Data\Managed\Assembly-CSharp.dll") -PathType Leaf)) {
+    throw "Pass -GameDir PATH or set NuclearOptionGameDir to the Nuclear Option install folder."
+}
+
 if (Test-Path -LiteralPath $stageRoot) {
     Remove-Item -LiteralPath $stageRoot -Recurse -Force
 }
@@ -16,7 +25,7 @@ if (Test-Path -LiteralPath $archive) {
     Remove-Item -LiteralPath $archive -Force
 }
 
-dotnet build -c Release
+dotnet build -c Release "-p:GameDir=$GameDir"
 $oldRustFlags = $env:RUSTFLAGS
 try {
     $env:RUSTFLAGS = "-C target-feature=+crt-static"

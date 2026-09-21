@@ -5,7 +5,6 @@
     <Description>Adds the GTF Hercules from FreeSpace 2</Description>
     <Version>1.0.0</Version>
     <LangVersion>latest</LangVersion>
-    <GameDir>E:\Game\Nuclear.Option.v0.34.2</GameDir>
     <Managed>$(GameDir)\NuclearOption_Data\Managed</Managed>
   </PropertyGroup>
   <ItemGroup>

@@ -143,7 +143,7 @@ namespace FS2Hercules
             Log.LogError(
                 "GTF Hercules was not loaded because generated assets are missing: " +
                 string.Join(", ", missing) +
-                ". Run tools/extract_hercules.py against a user-owned FreeSpace 2 installation.");
+                ". Double-click Extract-FS2Hercules.cmd and select a user-owned FreeSpace 2 installation.");
             return false;
         }
 
@@ -1050,7 +1050,7 @@ namespace FS2Hercules
             return tex;
         }
 
-        // Reads the file written by tools/glb2mesh.py (per submesh: material name, pos/normal/uv vertices, indices)
+        // Reads the binary mesh written by the asset tool (per submesh: material name, pos/normal/uv vertices, indices)
         // and builds one mesh with a submesh per requested material, in the order given.
         static Mesh LoadMesh(string path, params string[] materials)
         {

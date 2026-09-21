@@ -5,7 +5,6 @@
 *.json text
 *.md text
 *.ps1 text
-*.py text
 *.rs text
 *.toml text
 

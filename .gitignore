@@ -13,7 +13,6 @@ packages/
 assets/
 
 # Rust tooling output
-tools/pof2glb/target/
 tools/assettool/target/
 tools/FS2Hercules.AssetTool.exe
 
@@ -31,8 +30,6 @@ Logs/
 Temp/
 UserSettings/
 *.log
-__pycache__/
-*.pyc
 
 # OS noise
 .DS_Store
