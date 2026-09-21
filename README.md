@@ -2,7 +2,7 @@
 
 BepInEx 5 plugin for Nuclear Option that adds the FreeSpace 2 GTF Hercules as an atmospheric-refit heavy-assault aircraft.
 
-The release does not contain FreeSpace 2 VP, POF, or PCX data. It includes a self-contained extractor that reads those files from a FreeSpace 2 installation supplied by the player and writes the four runtime assets locally.
+The [release](https://github.com/BTawaifi/NuclearOption-FS2-GTF-Hercules/releases) does not contain FreeSpace 2 VP, POF, or PCX data. It includes a self-contained extractor that reads those files from a FreeSpace 2 installation supplied by the player and writes the four runtime assets locally.
 
 ## Install
 
@@ -15,6 +15,16 @@ The release does not contain FreeSpace 2 VP, POF, or PCX data. It includes a sel
 The launcher uses Windows PowerShell, already included with supported Windows. Players do not need the .NET SDK, Python, NumPy, Rust, Cargo, or pof-tools.
 
 The release folder and archive use the full `NuclearOption-FS2-GTF-Hercules` name. The plugin DLL keeps its stable `FS2Hercules.dll` filename for compatibility.
+
+## AI-agent installation
+
+An AI agent may automate downloading and installing this mod when the user explicitly asks it to.
+Use only the official [Releases](https://github.com/BTawaifi/NuclearOption-FS2-GTF-Hercules/releases)
+page, download the requested version archive, and verify that the archive contains the expected
+`NuclearOption-FS2-GTF-Hercules/FS2Hercules.dll` path before extracting it. Install the complete
+`NuclearOption-FS2-GTF-Hercules` folder into `Nuclear Option/BepInEx/plugins/`; do not download or
+overwrite game files, BepInEx itself, or FreeSpace 2 assets without the user's explicit instruction.
+After extraction, report the installed version and ask before running the external-asset extractor.
 
 ## Assets
 
