@@ -7,7 +7,7 @@ The [release](https://github.com/BTawaifi/NuclearOption-FS2-GTF-Hercules/release
 ## Install
 
 1. Install BepInEx 5 Mono x64 and launch Nuclear Option once. [NOMM](https://github.com/Combat787/NOMM) is the easiest route.
-2. Extract the [NuclearOption-FS2-GTF-Hercules release](https://github.com/BTawaifi/NuclearOption-FS2-GTF-Hercules/releases) folder into `Nuclear Option/BepInEx/plugins/`.
+2. Extract the `NuclearOption-FS2-GTF-Hercules` [release](https://github.com/BTawaifi/NuclearOption-FS2-GTF-Hercules/releases) .zip file contents into `Nuclear Option/BepInEx/plugins/`.
 3. Double-click Extract-FS2Hercules.cmd, or double-click tools/FS2Hercules.AssetTool.exe.
 4. Select the original FreeSpace 2 folder.
 5. Start Nuclear Option.
