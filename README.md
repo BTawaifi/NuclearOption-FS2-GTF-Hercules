@@ -17,11 +17,11 @@ The repository and release payload do not contain the original FreeSpace 2 VP, P
 
 1. Install BepInEx 5 Mono x64 into Nuclear Option and launch the game once.
 2. Extract the FS2Hercules folder into Nuclear Option/BepInEx/plugins/.
-3. Double-click Extract-FS2Hercules.cmd inside the FS2Hercules folder.
+3. Double-click Extract-FS2Hercules.cmd inside the FS2Hercules folder. You can also double-click tools/FS2Hercules.AssetTool.exe directly.
 4. Select the folder containing the original FreeSpace 2 installation when prompted.
 5. Start Nuclear Option.
 
-The release launcher uses Windows PowerShell, which is already included with supported Windows installations. Players do not need the .NET SDK, Python, NumPy, Rust, Cargo, or a FreeSpace Open development checkout.
+The launcher and the asset tool use Windows PowerShell for the native folder picker and completion dialog. PowerShell is already included with supported Windows installations. Players do not need the .NET SDK, Python, NumPy, Rust, Cargo, or a FreeSpace Open development checkout.
 
 The launcher auto-detects common Steam and GOG locations. If it cannot find one, it opens a folder picker. It only creates or replaces files in the mod's assets directory; it does not modify the FreeSpace 2 or Nuclear Option installation.
 

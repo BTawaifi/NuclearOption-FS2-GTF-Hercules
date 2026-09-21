@@ -31,9 +31,19 @@ struct MeshChunk {
 }
 
 fn main() {
+    let interactive = env::args().len() == 1;
     if let Err(error) = run() {
+        if interactive {
+            show_message("FS2 Hercules", &format!("Extraction failed: {error}"));
+        }
         eprintln!("FS2Hercules asset extraction failed: {error}");
         std::process::exit(1);
+    }
+    if interactive {
+        show_message(
+            "FS2 Hercules",
+            "Assets created successfully. Restart Nuclear Option to load them.",
+        );
     }
 }
 
@@ -43,9 +53,15 @@ fn run() -> Result<()> {
         print_help();
         return Ok(());
     }
-    let freespace = required_arg(&args, "--freespace")?;
-    let output =
-        PathBuf::from(optional_arg(&args, "--output").unwrap_or_else(|| "assets".to_string()));
+    let freespace = match optional_arg(&args, "--freespace") {
+        Some(path) => path,
+        None if args.len() == 1 => pick_freespace_folder()?,
+        None => return Err("missing --freespace; use --help for usage".into()),
+    };
+    let output = PathBuf::from(
+        optional_arg(&args, "--output")
+            .unwrap_or_else(|| default_output_dir().to_string_lossy().into_owned()),
+    );
     fs::create_dir_all(&output)?;
 
     let archives = find_archives(Path::new(&freespace))?;
@@ -89,8 +105,61 @@ fn print_help() {
     println!("  FS2Hercules.AssetTool.exe --freespace <FS2 folder or VP file> [--output <assets folder>]");
 }
 
-fn required_arg(args: &[String], name: &str) -> Result<String> {
-    optional_arg(args, name).ok_or_else(|| format!("missing {name}; use --help for usage").into())
+fn default_output_dir() -> PathBuf {
+    env::current_exe()
+        .ok()
+        .and_then(|path| path.parent().and_then(Path::parent).map(Path::to_path_buf))
+        .map(|root| root.join("assets"))
+        .unwrap_or_else(|| PathBuf::from("assets"))
+}
+
+fn pick_freespace_folder() -> Result<String> {
+    let script = r#"
+Add-Type -AssemblyName System.Windows.Forms
+$dialog = New-Object System.Windows.Forms.FolderBrowserDialog
+$dialog.Description = 'Select the folder containing your original FreeSpace 2 installation'
+$dialog.UseDescriptionForTitle = $true
+if ($dialog.ShowDialog() -eq [System.Windows.Forms.DialogResult]::OK) {
+    [Console]::Out.Write($dialog.SelectedPath)
+}
+"#;
+    let result = std::process::Command::new("powershell.exe")
+        .args([
+            "-NoLogo",
+            "-NoProfile",
+            "-ExecutionPolicy",
+            "Bypass",
+            "-Command",
+            script,
+        ])
+        .output()?;
+    if !result.status.success() {
+        return Err("Windows folder picker could not be opened".into());
+    }
+    let folder = String::from_utf8(result.stdout)?.trim().to_string();
+    if folder.is_empty() {
+        return Err("no FreeSpace 2 folder was selected".into());
+    }
+    Ok(folder)
+}
+
+fn show_message(title: &str, message: &str) {
+    let escape = |value: &str| value.replace('\'', "''").replace(['\r', '\n'], " ");
+    let script = format!(
+        "Add-Type -AssemblyName System.Windows.Forms; [System.Windows.Forms.MessageBox]::Show('{}','{}') | Out-Null",
+        escape(message),
+        escape(title),
+    );
+    let _ = std::process::Command::new("powershell.exe")
+        .args([
+            "-NoLogo",
+            "-NoProfile",
+            "-ExecutionPolicy",
+            "Bypass",
+            "-Command",
+            &script,
+        ])
+        .status();
 }
 
 fn optional_arg(args: &[String], name: &str) -> Option<String> {
