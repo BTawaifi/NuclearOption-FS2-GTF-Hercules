@@ -10,6 +10,7 @@
 *.toml text
 
 *.dll binary
+*.exe binary
 *.pdb binary
 *.png binary
 *.nomesh binary

@@ -1,0 +1,10 @@
+[package]
+name = "fs2hercules-assettool"
+version = "1.0.0"
+edition = "2021"
+
+[dependencies]
+crc32fast = "1"
+flate2 = "1"
+gltf = "=1.3.0"
+pof = { path = "D:/Games/FreespaceOpen/tools/pof-tools-src/pof" }

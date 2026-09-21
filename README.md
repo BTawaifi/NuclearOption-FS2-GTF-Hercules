@@ -1,8 +1,8 @@
 # FS2 Hercules
 
-FS2 Hercules is a BepInEx 5 plugin for Nuclear Option that adds an atmospheric-refit GTF Hercules heavy-assault aircraft. The plugin registers the aircraft through Harmony patches, reuses the stock fixed-wing aircraft systems for networking and damage, and loads generated visual assets from the adjacent assets directory.
+FS2 Hercules is a BepInEx 5 plugin for Nuclear Option that adds an atmospheric-refit GTF Hercules heavy-assault aircraft. The plugin registers the aircraft through Harmony patches, reuses the stock fixed-wing aircraft systems for networking and damage, and loads visual assets from the adjacent assets directory.
 
-The repository and release payload do not contain the original FreeSpace 2 VP, POF, or PCX files. Generate the four runtime assets from a FreeSpace 2 installation that you own before running the mod.
+The repository and release payload do not contain the original FreeSpace 2 VP, POF, or PCX files. The release includes a small self-contained extractor that reads those files from a FreeSpace 2 installation supplied by the player and writes only the four runtime files the mod needs.
 
 ## Compatibility
 
@@ -11,57 +11,60 @@ The repository and release payload do not contain the original FreeSpace 2 VP, P
 - Plugin assembly: FS2Hercules.dll
 - Plugin version: 1.0.0
 
-## Generate the visual assets
+## Install for players
 
-Requirements:
+[NOMM](https://github.com/Combat787/NOMM) is the easiest way to install BepInEx and manage Nuclear Option mods. For a manual install, use [BepInEx 5 Mono x64](https://github.com/BepInEx/BepInEx/releases):
 
-- Python 3
-- numpy, installed with python -m pip install -r tools/requirements.txt
-- Rust/Cargo
-- A local checkout of the FreeSpace Open pof-tools repository, or an already-built pof2glb converter
-- A user-owned FreeSpace 2 installation containing its VP archives
+1. Install BepInEx 5 Mono x64 into Nuclear Option and launch the game once.
+2. Extract the FS2Hercules folder into Nuclear Option/BepInEx/plugins/.
+3. Double-click Extract-FS2Hercules.cmd inside the FS2Hercules folder.
+4. Select the folder containing the original FreeSpace 2 installation when prompted.
+5. Start Nuclear Option.
 
-From the repository root, run:
+The release launcher uses Windows PowerShell, which is already included with supported Windows installations. Players do not need the .NET SDK, Python, NumPy, Rust, Cargo, or a FreeSpace Open development checkout.
 
-    python tools/extract_hercules.py --freespace "D:\Games\Freespace 2" --pof-tools "D:\Games\FreespaceOpen\tools\pof-tools-src"
+The launcher auto-detects common Steam and GOG locations. If it cannot find one, it opens a folder picker. It only creates or replaces files in the mod's assets directory; it does not modify the FreeSpace 2 or Nuclear Option installation.
 
-The default output is the repository's assets directory. To use a different tools checkout, pass its path with --pof-tools. To use an existing converter instead of Cargo, pass --converter PATH.
+Expected installed layout:
 
-The script reads data/models/fighter06.pof and data/maps/fighter06-01a.pcx from the VP archives, converts only the fighter06a hull, and writes:
+    BepInEx/plugins/FS2Hercules/
+        FS2Hercules.dll
+        Extract-FS2Hercules.cmd
+        Extract-FS2Hercules.ps1
+        tools/FS2Hercules.AssetTool.exe
+        assets/
+            HercPBR-glow.png
+            HercPBR-normal.png
+            HercPBR.png
+            hercules.nomesh
 
-    assets/
-        HercPBR-glow.png
-        HercPBR-normal.png
-        HercPBR.png
-        hercules.nomesh
+## External assets and hot swapping
 
-The extracted VP contents are temporary inputs and are not copied to the output.
+The plugin deliberately loads the mesh and textures from the external assets directory beside the DLL. After extraction, a player or creator can replace:
 
-## Build
+- hercules.nomesh for the mesh
+- HercPBR.png for the albedo
+- HercPBR-normal.png for the normal map
+- HercPBR-glow.png for the emission map
 
-The project targets net472 and uses the pinned SDK in global.json. Set the GameDir property in FS2Hercules.csproj to the local Nuclear Option installation, then run:
+The mesh must contain a material named HercPBR. Restart Nuclear Option after changing files because the visual is loaded when the aircraft encyclopedia is built. The asset tool only regenerates the default assets; it does not overwrite the original FreeSpace 2 files.
+
+## Build from source
+
+The plugin targets net472 and uses the pinned SDK in global.json. Set the GameDir property in FS2Hercules.csproj to the local Nuclear Option installation, then run:
 
     dotnet build -c Release
 
-The installable payload is bin/Release/net472/FS2Hercules.dll plus the generated assets directory. Game assemblies and BepInEx/Harmony references are compile-time/runtime dependencies and are not redistributed by this project.
+To build the self-contained asset tool, install Rust/Cargo and obtain a local FreeSpace Open pof-tools checkout. Set the pof dependency path in tools/assettool/Cargo.toml if it is not at the documented development path, then run:
 
-## Install
+    cargo build --release --manifest-path tools/assettool/Cargo.toml
 
-1. Generate assets as described above.
-2. Copy FS2Hercules.dll and the generated assets directory into Nuclear Option/BepInEx/plugins/FS2Hercules/.
-
-The plugin does not download files, modify the game installation, edit the registry, start processes, or delete user data. If generated assets are missing, it logs the extraction command and leaves the base game unchanged.
+Copy the resulting target/release/fs2hercules-assettool.exe to tools/FS2Hercules.AssetTool.exe when preparing a release archive. The older Python extractor remains in tools/extract_hercules.py as a developer fallback, but is not required by the player workflow.
 
 ## NOMNOM release requirements
 
-This repository is structured as one mod with an un-obfuscated source tree and a BepInEx 5 plugin. A NOMNOM release should:
+This repository is structured as one mod with an un-obfuscated source tree, a BepInEx 5 plugin, and source for the bundled asset executable. A release archive should contain the complete FS2Hercules plugin folder, including the launcher and asset tool, as its first GitHub release asset.
 
-1. Use a parseable tag such as 1.0.0, matching the assembly version.
-2. Upload one archive containing the complete FS2Hercules plugin folder as the first release asset.
-3. Keep original FreeSpace 2 VP/POF/PCX data out of the repository and release archive.
-4. Add the release URL and SHA-256 hash to the mod manifest in the NOMNOM registry.
-5. Include the asset-permission evidence described in THIRD_PARTY_NOTICES.md before requesting registry approval.
+The local-extraction design avoids redistributing the original game data, but an archive that requires the player to run the extractor is not a complete immediately-installable package under NOMNOM's strict wording. The remaining approval choices are permission for a distributable asset package, newly created replacement assets, or explicit acceptance of a build-from-user-owned-data workflow.
 
-The local-extraction design avoids redistributing the original game data, but an archive that requires the user to run the extractor is not a complete drop-in package. If NOMNOM requires every release to be immediately installable, this project still needs either permission for a distributable asset package or replacement assets with a compatible license.
-
-The source code is intentionally shipped in this repository so a release DLL can be compared with its source, as required by NOMNOM's open-source policy.
+See NOMNOM_SUBMISSION.md and THIRD_PARTY_NOTICES.md for the remaining submission evidence.

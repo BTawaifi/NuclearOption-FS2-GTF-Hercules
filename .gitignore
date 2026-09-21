@@ -14,6 +14,8 @@ assets/
 
 # Rust tooling output
 tools/pof2glb/target/
+tools/assettool/target/
+tools/FS2Hercules.AssetTool.exe
 
 # IDE and local machine state
 .vs/
