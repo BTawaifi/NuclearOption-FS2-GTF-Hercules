@@ -12,6 +12,14 @@ The [release](https://github.com/BTawaifi/NuclearOption-FS2-GTF-Hercules/release
 4. Select the original FreeSpace 2 folder.
 5. Start Nuclear Option.
 
+For a non-standard FreeSpace 2 location, pass it to the launcher instead of using the folder picker:
+
+    Extract-FS2Hercules.cmd -FreeSpace "D:\Games\FreeSpace 2"
+
+Use `-Output` to place the generated assets in a different mod assets folder:
+
+    Extract-FS2Hercules.cmd -FreeSpace "D:\Games\FreeSpace 2" -Output "D:\Mods\Hercules\assets"
+
 The launcher uses Windows PowerShell, already included with supported Windows. Players do not need the .NET SDK, Python, NumPy, Rust, Cargo, or pof-tools.
 
 The release folder and archive use the full `NuclearOption-FS2-GTF-Hercules` name. The plugin DLL keeps its stable `FS2Hercules.dll` filename for compatibility.
