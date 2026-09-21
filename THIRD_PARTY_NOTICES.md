@@ -18,9 +18,15 @@ https://wiki.hard-light.net/index.php/GTF_Hercules
 
 The original game is developed by Volition and published by Interplay; this project is not affiliated with either company. The aircraft name and fictional setting references are used only to identify the adaptation and do not imply endorsement.
 
+## FreeSpace Open pof-tools (`pof` crate)
+
+The asset tool statically links the `pof` crate from Baezon's [pof-tools project](https://github.com/Baezon/pof-tools) to parse the FreeSpace model format. This is an attribution to the upstream project, not a claim that its code is covered by this repository's MIT license.
+
+The upstream repository currently does not declare a license in its package metadata or include a license file. Permission to redistribute the compiled `pof` code therefore remains unresolved and must be confirmed with the upstream author before treating the asset tool as fully cleared for redistribution.
+
 ## Asset tool and runtime dependencies
 
-The bundled asset tool is compiled from tools/assettool/src/main.rs and uses the FreeSpace Open pof-tools crate from a local development checkout. It contains no FreeSpace 2 data. The pof-tools source and its dependencies remain subject to their own licenses.
+The bundled asset tool is compiled from tools/assettool/src/main.rs. It contains no FreeSpace 2 data. Its other Rust dependencies remain subject to their own licenses.
 
 The plugin is built against the user's locally installed Nuclear Option, BepInEx 5, Harmony, Unity, and Mirage assemblies. Those assemblies are not included in this repository's release payload and remain subject to their own terms.
 
