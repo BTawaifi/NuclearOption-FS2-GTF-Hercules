@@ -1,0 +1,37 @@
+# .NET and MSBuild output
+[Bb]in/
+[Oo]bj/
+[Aa]rtifacts/
+[Bb]uild/
+[Bb]uilds/
+*.dll
+*.pdb
+*.nupkg
+packages/
+
+# Generated from a user-owned FreeSpace 2 installation; never commit or ship it.
+assets/
+
+# Rust tooling output
+tools/pof2glb/target/
+
+# IDE and local machine state
+.vs/
+.idea/
+*.user
+*.userosscache
+*.suo
+*.sln.docstates
+
+# Unity/editor and tool logs if generated locally
+Library/
+Logs/
+Temp/
+UserSettings/
+*.log
+__pycache__/
+*.pyc
+
+# OS noise
+.DS_Store
+Thumbs.db

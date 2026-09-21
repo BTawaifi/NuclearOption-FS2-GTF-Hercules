@@ -1,0 +1,6 @@
+[package]
+name = "pof2glb"
+version = "0.1.0"
+edition = "2021"
+[dependencies]
+pof = { path = "D:/Games/FreespaceOpen/tools/pof-tools-src/pof" }
